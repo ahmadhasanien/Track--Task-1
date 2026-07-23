@@ -1,0 +1,824 @@
+.ui-card {
+  background: #ffffff;
+  border: 1px solid #e7e8eb;
+  border-radius: 16px;
+  height: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  /* Without this, flex children default to min-width: auto and refuse to
+     shrink below their content's natural size, so at narrow grid-column
+     widths (e.g. after a window resize) text and charts overflow the
+     card instead of wrapping/shrinking. */
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ui-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.3;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ui-badge__icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ui-badge--success {
+  background: #d1f0e1;
+  color: #067647;
+}
+
+.ui-badge--warning {
+  background: #fde9ce;
+  color: #b54708;
+}
+
+.ui-badge--danger {
+  background: #fee4e2;
+  color: #b42318;
+}
+
+.ui-badge--info {
+  background: #d1e9ff;
+  color: #175cd3;
+}
+
+.ui-badge--neutral {
+  background: #f4f4f5;
+  color: #3f3f46;
+}
+
+.ui-progress__track {
+  width: 100%;
+  height: 6px;
+  background: #e7e8eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ui-progress__fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.ui-progress__fill--success {
+  background: linear-gradient(90deg, #17b26a, #50b055);
+}
+
+.ui-progress__fill--warning {
+  background: linear-gradient(90deg, #f79009, #f9a94a);
+}
+
+.ui-progress__fill--danger {
+  background: linear-gradient(90deg, #f04438, #f2695f);
+}
+
+.ui-progress__fill--info {
+  background: linear-gradient(90deg, #2e90fa, #53a6fb);
+}
+
+.widget-wrapper {
+  position: relative;
+  height: 100%;
+  min-width: 0;
+}
+
+.widget-wrapper__content--auto {
+  /* Intentionally NOT height: 100% — this lets the child Card size itself
+     to its actual content (so we can measure it) instead of being
+     stretched/clipped to whatever row-span the grid last assigned. The
+     grid then grows/shrinks to match via ResizeObserver, not the other
+     way around. */
+  min-width: 0;
+}
+
+.widget-wrapper__content--auto .ui-card {
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
+}
+
+.widget-wrapper--edit {
+  outline: 2px dashed #17b26a;
+  outline-offset: 2px;
+  border-radius: 16px;
+}
+
+.widget-wrapper__remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.15s ease;
+}
+
+.widget-wrapper__remove:hover {
+  transform: scale(1.05);
+}
+
+.widget-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #18181b;
+  line-height: 1.2;
+}
+
+.widget-stat-label {
+  font-size: 13px;
+  color: #71717a;
+  margin-top: 4px;
+}
+
+.widget-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #18181b;
+  margin: 0 0 10px;
+}
+
+/* Pushes a block to the bottom of the (flex-column) card, e.g. a stat
+   value that should sit under a title with empty space in between. */
+.widget-stat-block {
+  margin-top: auto;
+}
+
+/* Number + unit label sitting on the same line (e.g. "8 مشاريع"),
+   instead of stacked on separate lines. */
+.widget-stat-inline {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.widget-stat-inline .widget-stat-label {
+  margin-top: 0;
+}
+
+/* Bottom row that pairs a stat block with something else (e.g. a badge),
+   spaced apart edge-to-edge. In RTL the first child lands on the right. */
+.widget-bottom-row {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Title + small icon-only badge on a single header row. */
+.widget-icon-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.widget-icon-header .widget-title {
+  margin: 0;
+}
+
+.widget-icon-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: #d1f0e1;
+  color: #17b26a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Middle content row for the progress widget: percentage value + status
+   pill, spaced apart, sitting above the progress bar. */
+.widget-progress-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* --- Compact top-row KPI cards (Active Projects / Upcoming Deliverables) ---
+   These two cards only hold a title + a single stat line, so the default
+   "title top, stat pushed to the bottom via margin-top:auto" layout leaves
+   a large, uneven gap compared to the denser sibling KPI cards. Pulling
+   the stat up closer to the title keeps the card's fixed grid height but
+   removes that visual dead space. */
+.widget-kpi-compact {
+  justify-content: flex-start;
+}
+
+.widget-kpi-compact__title {
+  font-weight: 500;
+  color: #27272a;
+  margin-bottom: 8px;
+}
+
+.widget-kpi-compact .widget-stat-block {
+  margin-top: 6px;
+}
+
+.widget-kpi-compact .widget-stat-label {
+  font-size: 12px;
+  color: #71717a;
+}
+
+.widget-kpi-compact__bottom-row {
+  margin-top: 6px;
+}
+
+/* --- Upcoming Deliverables widget (widget 3) ---
+   Same title/value/label sizing correction as widget-active-projects below;
+   scoped separately so it doesn't touch that widget, and deliberately
+   leaves the warning Badge (the "خلال أسبوع" pill) untouched. */
+.widget-upcoming-deliverables .widget-kpi-compact__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8e8f97;
+}
+
+.widget-upcoming-deliverables .widget-stat-value {
+  font-size: 28px;
+  color: #000000;
+}
+
+.widget-upcoming-deliverables .widget-stat-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #8e8f97;
+}
+
+/* Unlike Active Projects, this card's stat row should sit at the
+   bottom of the card with the title pinned at top, not pulled up
+   close beneath it. */
+.widget-upcoming-deliverables .widget-kpi-compact__bottom-row {
+  margin-top: auto;
+}
+
+
+/* --- Active Projects widget (widget 1) ---
+   Scoped on top of .widget-kpi-compact so it doesn't affect the sibling
+   Upcoming Deliverables card, which still uses the shared base styles. */
+.widget-active-projects {
+  justify-content: center;
+}
+
+.widget-active-projects .widget-kpi-compact__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8e8f97;
+  margin-bottom: 12px;
+}
+
+.widget-active-projects .widget-stat-block {
+  margin-top: 10px;
+}
+
+.widget-active-projects .widget-stat-value {
+  font-size: 28px;
+  color: #000000;
+}
+
+.widget-active-projects .widget-stat-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #8e8f97;
+}
+
+/* --- Average progress widget --- */
+
+.widget-avg-progress {
+  gap: 0;
+}
+
+.widget-avg-progress .widget-icon-header {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+/* Title must never wrap: at the widget's minimum grid width there isn't
+   room for two lines, and since the card has a fixed (grid-driven)
+   height with overflow:hidden, a wrapped title pushes the progress bar
+   past the bottom edge and clips it out of view entirely. Truncating
+   instead guarantees the badge + value row and the bar always fit. */
+.widget-avg-progress .widget-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.widget-avg-progress .widget-progress-row {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.widget-avg-progress__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8e8f97;
+}
+
+.widget-avg-progress__value {
+  font-size: 28px;
+  font-weight: 800;
+  color: #000000;
+  margin: 0;
+  line-height: 1.15;
+}
+
+/* Original design uses a brighter status-pill text color than the shared
+   ui-badge--success default; scoped here so ProjectsListWidget and
+   UpcomingDeliverablesWidget (which also use Badge variant="success")
+   keep their existing look. */
+.widget-avg-progress .ui-badge--success {
+  color: #17b26a;
+}
+
+.widget-avg-progress__bar {
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.widget-avg-progress__bar .ui-progress__track {
+  height: 10px;
+  background: #d9d9d9;
+}
+
+/* Original design's fill is a flat green, not the shared gradient used by
+   ProjectsListWidget/UpcomingDeliverablesWidget's progress bars. */
+.widget-avg-progress__bar .ui-progress__fill--success {
+  background: #17b26a;
+}
+
+/* --- Open risks ring breakdown widget --- */
+
+.widget-open-risks__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8e8f97;
+}
+
+/* The shared .legend-item spreads value/label to opposite edges via
+   space-between, which reads as too much air between the number and
+   the label in this widget's design. The label group is a different
+   width on each line (مرتفع / متوسط / منخفض); pinning it to a fixed
+   column width keeps its right edge (and therefore the value's
+   centered slot next to it) in the exact same place row to row, so
+   the numbers both center between the chart and label *and* stack
+   into a clean vertical column, matching the target design. */
+.widget-open-risks .legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.widget-open-risks .legend-item__left {
+  flex: 0 0 76px;
+  justify-content: flex-start;
+  white-space: nowrap;
+}
+
+.widget-open-risks .legend-item__value {
+  flex: 1;
+  text-align: center;
+}
+
+/* --- Risks by level chart widget --- */
+
+.widget-risks-chart {
+  gap: 0;
+}
+
+.widget-risks-chart__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.widget-risks-chart .widget-title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.widget-risks-chart__legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.widget-risks-chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #18181b;
+  white-space: nowrap;
+}
+
+.widget-risks-chart__legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.widget-risks-chart__plot {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.widget-risks-chart__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.widget-risks-chart__segment {
+  cursor: pointer;
+  transition: opacity 0.1s ease;
+}
+
+.widget-risks-chart__tooltip {
+  position: absolute;
+  transform: translate(-50%, -130%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #18181b;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 9px;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+}
+
+.widget-risks-chart__tooltip strong {
+  font-weight: 700;
+}
+
+.widget-risks-chart__tooltip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.widget-risks-chart__tick {
+  font-size: 11px;
+  fill: #71717a;
+  font-family: inherit;
+}
+
+.widget-risks-chart__month {
+  font-size: 11px;
+  fill: #a1a1aa;
+  font-family: inherit;
+}
+
+.widget-risks-chart__month--active {
+  fill: #18181b;
+  font-weight: 700;
+}
+
+/* --- Project status donut widget --- */
+
+.widget-status-donut {
+  gap: 0;
+}
+
+.widget-status-donut .widget-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.widget-status-donut__body {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+.widget-status-donut__legend {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.widget-status-donut__legend .legend-item {
+  background: #f4f4f5;
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+
+.widget-status-donut__legend .legend-item__left {
+  color: #18181b;
+  font-weight: 700;
+}
+
+.widget-status-donut__chart {
+  width: 150px;
+  height: 150px;
+  flex-shrink: 0;
+}
+
+/* --- Today alerts widget --- */
+
+.widget-today-alerts {
+  gap: 0;
+}
+
+.widget-today-alerts__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e7e8eb;
+}
+
+.widget-today-alerts__header .widget-header__title {
+  margin: 0;
+}
+
+.widget-today-alerts__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #d1e9ff;
+  color: #2e90fa;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.widget-header__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.widget-header__link {
+  font-size: 13px;
+  color: #2e90fa;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.widget-header__link:hover {
+  text-decoration: underline;
+}
+
+.legend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.legend-item__left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #55555a;
+}
+
+.legend-item__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-item__value {
+  font-weight: 700;
+  color: #18181b;
+}
+
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.alert-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  background: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid #e7e8eb;
+}
+
+.alert-item:first-child {
+  padding-top: 2px;
+}
+
+.alert-item:last-child {
+  padding-bottom: 2px;
+  border-bottom: none;
+}
+
+.alert-item__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.alert-item__icon--deliverable {
+  background: #d1f0e1;
+  color: #17b26a;
+}
+
+.alert-item__icon--risk {
+  background: #fde9ce;
+  color: #f79009;
+}
+
+.alert-item__icon--approval {
+  background: #d1e9ff;
+  color: #2e90fa;
+}
+
+.alert-item__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.alert-item__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0 0 2px;
+}
+
+.alert-item__subtitle {
+  font-size: 13px;
+  color: #71717a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alert-item__time {
+  font-size: 12px;
+  color: #71717a;
+  white-space: nowrap;
+}
+
+/* --- Stacked list rows (Projects / Deliverables widgets) ---
+   Replaces the old single-item "carousel" pattern: instead of flipping
+   through one item at a time with a prev/next pair pinned to the card's
+   bottom, every item renders as its own row with a single leading
+   ("next"/details) chevron, stacked in a scrollable column so the list
+   can hold more items than the card's fixed grid height. */
+.list-rows {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e7e8eb;
+}
+
+.list-row:last-child {
+  border-bottom: none;
+}
+
+.list-row__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.list-row__title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-row__subtitle {
+  font-size: 13px;
+  color: #71717a;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-row__bar {
+  width: 56px;
+  flex-shrink: 0;
+}
+
+.list-row__percentage {
+  font-size: 13px;
+  font-weight: 700;
+  color: #18181b;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.list-row__nav-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e7e8eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #55555a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.list-row__nav-btn:hover {
+  background: #f5f5f6;
+}
