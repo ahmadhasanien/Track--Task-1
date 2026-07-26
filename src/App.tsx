@@ -2,6 +2,7 @@ import { AppShell } from './components/layout/AppShell';
 import { Header } from './components/layout/Header';
 import { DashboardGrid, useDashboardState } from './components/dashboard/DashboardGrid';
 import { WidgetLibraryPanel } from './components/dashboard/WidgetLibraryPanel';
+import { AIAssistantPanel } from './components/assistant/AIAssistantPanel';
 import './components/layout/layout.css';
 import './components/dashboard/dashboard.css';
 import './styles/global.css';
@@ -48,6 +49,7 @@ function App() {
           />
         )}
       </div>
+      <AIAssistantPanel />
     </AppShell>
   );
 }
