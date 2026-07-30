@@ -123,11 +123,11 @@ export const projects: ProjectItem[] = [
 ];
 
 export const navItems = [
-  { id: 'dashboard', label: 'لوحة التحكم', active: true },
-  { id: 'goals', label: 'الأهداف الإستراتيجية', active: false },
-  { id: 'projects', label: 'المشاريع', active: false },
-  { id: 'companies', label: 'الشركات', active: false },
-  { id: 'departments', label: 'الإدارات', active: false },
+  { id: 'dashboard', label: 'لوحة التحكم' },
+  { id: 'goals', label: 'الأهداف الإستراتيجية' },
+  { id: 'projects', label: 'المشاريع' },
+  { id: 'companies', label: 'الشركات' },
+  { id: 'departments', label: 'الإدارات' },
 ];
 
 export const userProfile = {

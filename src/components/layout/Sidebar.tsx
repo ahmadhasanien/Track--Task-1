@@ -20,7 +20,19 @@ const navIcons: Record<string, () => ReactElement> = {
   departments: DepartmentsIcon,
 };
 
-export function Sidebar() {
+export type PageId = 'dashboard' | 'companies';
+
+// Pages that actually exist and can be routed to. Other nav items
+// (goals, projects, departments) stay in the menu for visual
+// completeness but don't have a page wired up yet.
+const ROUTABLE_PAGES: PageId[] = ['dashboard', 'companies'];
+
+interface SidebarProps {
+  activePage: PageId;
+  onNavigate: (page: PageId) => void;
+}
+
+export function Sidebar({ activePage, onNavigate }: SidebarProps) {
   return (
     <aside className="sidebar" dir="rtl">
       <div className="sidebar__logo">
@@ -35,11 +47,20 @@ export function Sidebar() {
       <nav className="sidebar__nav">
         {navItems.map((item) => {
           const Icon = navIcons[item.id];
+          const isRoutable = ROUTABLE_PAGES.includes(item.id as PageId);
           return (
             <a
               key={item.id}
               href="#"
-              className={`sidebar__nav-item ${item.active ? 'sidebar__nav-item--active' : ''}`}
+              className={`sidebar__nav-item ${
+                item.id === activePage ? 'sidebar__nav-item--active' : ''
+              }`}
+              onClick={(event) => {
+                event.preventDefault();
+                if (isRoutable) {
+                  onNavigate(item.id as PageId);
+                }
+              }}
             >
               <Icon />
               <span>{item.label}</span>
