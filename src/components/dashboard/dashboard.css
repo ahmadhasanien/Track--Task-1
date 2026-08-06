@@ -1,15 +1,12 @@
 .dashboard-grid {
   width: 100%;
-  /* The grid uses a fixed 12-column layout rather than responsive
-     breakpoints, so below this width columns become too narrow to hold
-     their content no matter what. Scroll horizontally past this point
-     instead of letting widgets visually collapse into each other. */
+  
   min-width: 860px;
   overflow-x: auto;
 }
 
 .dashboard-grid__layout {
-  /* See the comment in DashboardGrid.tsx: this must stay LTR. */
+  
   direction: ltr;
 }
 
@@ -138,12 +135,7 @@
 }
 
 .widget-library__preview {
-  /* Tall enough that the miniature previews below never need to be
-     clipped or scaled down to fit — scaling the full-size dashboard
-     widgets into this box (the previous approach) is what caused
-     donuts/legends/bar charts to be cut off mid-shape. Each preview
-     below is purpose-built to fit here, styled to match the real
-     widget Card (white bg, same title/icon-badge treatment). */
+  
   min-height: 116px;
   display: flex;
   align-items: stretch;
@@ -168,8 +160,6 @@
 .widget-library__item-footer svg {
   color: #17b26a;
 }
-
-/* --- Widget library mini-preview building blocks (WidgetPreview.tsx) --- */
 
 .wlp-card {
   width: 100%;
@@ -208,17 +198,12 @@
   flex-shrink: 0;
 }
 
-/* Number + unit label on the same baseline (e.g. "8 مشاريع"), matching
-   .widget-stat-inline in the real widgets — not stacked on two lines. */
 .wlp-stat-inline {
   display: flex;
   align-items: baseline;
   gap: 6px;
 }
 
-/* Pairs a stat with something else (e.g. a badge) spaced edge-to-edge,
-   matching .widget-bottom-row. In this RTL card the first child lands on
-   the right. */
 .wlp-bottom-row {
   width: 100%;
   display: flex;

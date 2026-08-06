@@ -135,3 +135,90 @@ export const userProfile = {
   role: 'مدير النظام',
   initial: 'أ',
 };
+
+export const tenantStats = {
+  activeTenants: 8,
+  totalRevenue: 800,
+  subscriptionsEndingSoon: 4,
+};
+
+export const tenantStatusBreakdown = [
+  { name: 'معلق', value: 3, color: '#F04438' },
+  { name: 'تجربة', value: 5, color: '#F79009' },
+  { name: 'نشط', value: 4, color: '#17B26A' },
+];
+
+export const subscriptionsRevenueByMonth = [
+  { month: 'JAN', low: 3, medium: 1, high: 1 },
+  { month: 'FEB', low: 3, medium: 1, high: 2 },
+  { month: 'MAR', low: 2, medium: 1, high: 2 },
+  { month: 'APR', low: 2, medium: 1, high: 4 },
+  { month: 'MAY', low: 2, medium: 1, high: 3 },
+  { month: 'JUN', low: 2, medium: 0, high: 1 },
+  { month: 'JUL', low: 2, medium: 1, high: 2 },
+];
+
+export const tenantsByPlan = [
+  { label: 'نشط', value: 61.5, color: '#2E90FA' },
+  { label: 'تجربة', value: 18.4, color: '#F79009' },
+  { label: 'معطل', value: 11.2, color: '#F04438' },
+  { label: 'تجربة مجانية', value: 8.9, color: '#98A2B3' },
+];
+
+export type TenantAlertType = 'renewal' | 'unused-invite' | 'trial-expired';
+
+export interface TenantAlert {
+  id: string;
+  type: TenantAlertType;
+  title: string;
+  subtitle: string;
+  time: string;
+}
+
+export const tenantAlerts: TenantAlert[] = [
+  {
+    id: '1',
+    type: 'renewal',
+    title: 'اشتراك شركة نافذ ينتهي خلال يومين',
+    subtitle: 'Enterprise · 2 حد المستخدمين',
+    time: 'غداً',
+  },
+  {
+    id: '2',
+    type: 'unused-invite',
+    title: 'دعوة تفعيل لم تُستخدم بعد',
+    subtitle: 'أحمد العمري · الشركة السعودية للموارد',
+    time: 'منذ 3 ساعات',
+  },
+  {
+    id: '3',
+    type: 'trial-expired',
+    title: 'تجربة مؤسسة النور انتهت بدون ترقية',
+    subtitle: 'Demo · باقة',
+    time: 'منذ ساعة',
+  },
+];
+
+export interface LatestActionItem {
+  id: string;
+  title: string;
+}
+
+export const latestActions: LatestActionItem[] = [
+  { id: '1', title: 'إنشاء مستأجر جودين' },
+  { id: '2', title: 'ترقية باقة شركة تطوير' },
+  { id: '3', title: 'حذف مستخدم من الشركة السعودية' },
+];
+
+export interface LatestTenantItem {
+  id: string;
+  name: string;
+  status: 'active' | 'trial' | 'suspended';
+  statusLabel: string;
+}
+
+export const latestTenants: LatestTenantItem[] = [
+  { id: '1', name: 'جودين', status: 'active', statusLabel: 'نشط' },
+  { id: '2', name: 'الشركة السعودية للموارد', status: 'trial', statusLabel: 'تجربة' },
+  { id: '3', name: 'مؤسسة النور', status: 'suspended', statusLabel: 'معلق' },
+];

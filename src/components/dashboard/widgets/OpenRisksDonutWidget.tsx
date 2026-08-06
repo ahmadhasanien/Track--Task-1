@@ -13,9 +13,7 @@ export function OpenRisksDonutWidget() {
     <Card className="widget-open-risks">
       <p className="widget-title widget-open-risks__title">المخاطر المفتوحة</p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1 }}>
-        {/* Legend first, donut second: in this RTL card the first child
-            lands on the right, so this order puts the legend on the right
-            and the donut on the far left, matching the target design. */}
+        {}
         <div className="legend-list" style={{ flex: 1 }}>
           {data.map((item) => (
             <div key={item.name} className="legend-item">

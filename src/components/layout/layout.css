@@ -110,10 +110,13 @@
 }
 
 .sidebar__nav-item--active .sidebar__nav-icon {
-  /* Static <img> icons can't be recolored via `color`/currentColor like
-     an inline SVG — this filter forces it to solid white so it stays
-     legible against the green active background. */
+  
   filter: brightness(0) invert(1);
+}
+
+.sidebar__nav-item--active .sidebar__nav-icon--badge {
+  
+  filter: none;
 }
 
 .sidebar__footer {
@@ -193,6 +196,7 @@
 .header__edit-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   padding: 8px 14px;
   border: 1px solid #a1a1aa;
@@ -204,17 +208,20 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.header__edit-btn > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .header__edit-icon {
   flex-shrink: 0;
-}
-
-.header__edit-btn--active .header__edit-icon {
-  /* Static <img> icons can't be recolored via `color`/currentColor like
-     an inline SVG — this filter forces it to solid white so it stays
-     legible against the green active background. */
-  filter: brightness(0) invert(1);
+  display: block;
 }
 
 .header__edit-btn:hover {
@@ -233,6 +240,106 @@
   color: #ffffff;
 }
 
+.page-header {
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px 16px;
+  background: #fafafa;
+  border-top: 1px solid #404040;
+  border-bottom: 1px solid #e7e8eb;
+
+  
+  min-height: 88px;
+}
+
+.page-header__title-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.page-header__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #18181b;
+  line-height: 1.3;
+}
+
+.page-header__subtitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #71717a;
+  line-height: 1.4;
+}
+
+.page-header__subtitle--placeholder {
+  visibility: hidden;
+  user-select: none;
+  pointer-events: none;
+}
+
+.page-header__breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 0;
+}
+
+.page-header__breadcrumb-segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.page-header__breadcrumb-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  line-height: 1.3;
+}
+
+.page-header__breadcrumb-link:hover {
+  color: #52525b;
+}
+
+.page-header__breadcrumb-static {
+  font-size: 22px;
+  font-weight: 700;
+  color: #a1a1aa;
+  line-height: 1.3;
+}
+
+.page-header__breadcrumb-chevron {
+  color: #d4d4d8;
+  flex-shrink: 0;
+  
+}
+
+.page-header__title--current {
+  
+  color: #18181b;
+}
+
+.page-header__action {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  
+  min-width: 1px;
+}
+
 .dashboard-page {
   flex: 1;
   display: flex;
@@ -246,10 +353,7 @@
   flex: 1;
   gap: 0;
   padding: 24px 32px 32px;
-  /* Inherits direction: rtl from .app-shell for correct text flow.
-     The widget library panel is rendered as a position: fixed overlay
-     (see dashboard.css/.widget-library), not a flex child here, so it
-     never squeezes or reflows this row when edit mode toggles. */
+  
 }
 
 .dashboard-body__grid-area {
@@ -259,12 +363,7 @@
 }
 
 .dashboard-body__grid-area--library-open {
-  /* The widget library is a `position: fixed` overlay pinned to the
-     physical left edge (see .widget-library in dashboard.css), so
-     without this, whichever widgets land on the left side of the LTR
-     grid render underneath it — unreachable to resize or remove. This
-     padding reserves the same width, shifting all grid content clear
-     of the panel instead. */
+  
   padding-left: 320px;
   transition: padding-left 0.2s ease;
 }

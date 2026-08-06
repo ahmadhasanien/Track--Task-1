@@ -8,6 +8,7 @@ import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import {
   ALL_WIDGET_IDS,
+  DEFAULT_ACTIVE_WIDGET_IDS,
   DEFAULT_LAYOUT,
   WIDGET_REGISTRY,
   type WidgetId,
@@ -17,8 +18,6 @@ import './dashboard.css';
 
 const ResponsiveGrid = WidthProvider(GridLayout);
 
-// Must match the props passed to <ResponsiveGrid> below — used to convert a
-// widget's measured pixel height into an equivalent row-span.
 const ROW_HEIGHT = 60;
 const ROW_MARGIN_Y = 20;
 
@@ -59,14 +58,14 @@ export function DashboardGrid({
     [isEditMode, layout, onLayoutChange],
   );
 
-  // Widgets flagged `autoHeight` (e.g. today-alerts) report their natural
-  // content height here; we translate that into a row-span and grow/shrink
-  // the widget to fit — no manual resize required. react-grid-layout
-  // animates the height/position change itself (useCSSTransforms), and
-  // compactType="vertical" reflows anything below it.
-  // `layout` is read via a ref so this callback stays stable across
-  // renders (ResizeObserver callbacks always see the latest layout without
-  // needing to be re-subscribed every time anything changes).
+  
+  
+  
+  
+  
+  
+  
+  
   const layoutRef = useRef(layout);
   layoutRef.current = layout;
 
@@ -81,11 +80,11 @@ export function DashboardGrid({
   );
 
   return (
-    // Intentionally NOT dir="rtl" here: react-grid-layout has no built-in RTL
-    // support and positions items using physical left/top pixel math. Forcing
-    // this subtree to `direction: ltr` (see dashboard.css) keeps that math
-    // isolated and predictable. RTL text/icon direction for each widget's
-    // *content* is re-applied inside WidgetWrapper instead.
+    
+    
+    
+    
+    
     <div className="dashboard-grid">
       <ResponsiveGrid
         className="dashboard-grid__layout"
@@ -124,9 +123,9 @@ export function DashboardGrid({
   );
 }
 
-export function useDashboardState() {
+export function useDashboardState(initialActiveWidgetIds: WidgetId[] = DEFAULT_ACTIVE_WIDGET_IDS) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [activeWidgetIds, setActiveWidgetIds] = useState<WidgetId[]>(ALL_WIDGET_IDS);
+  const [activeWidgetIds, setActiveWidgetIds] = useState<WidgetId[]>(initialActiveWidgetIds);
   const [layout, setLayout] = useState<LayoutItem[]>(DEFAULT_LAYOUT);
 
   const removedWidgetIds = useMemo(

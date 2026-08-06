@@ -11,9 +11,6 @@ const statusVariant = {
   completed: 'success',
 } as const;
 
-// Progress-bar tone deliberately doesn't mirror the badge tone 1:1: an
-// on-track project's bar is blue (not green) per the target design, while
-// late/stalled bars do match their badge's warning/danger tone.
 const statusBarTone = {
   'on-track': 'info',
   late: 'warning',

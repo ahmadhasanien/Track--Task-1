@@ -3,14 +3,6 @@ interface EditGridIconProps {
   className?: string;
 }
 
-/**
- * Exact vector traced from the Figma design's edit-button icon
- * (grid squares + plus), swapped in for lucide's Grid2x2Plus so the
- * button matches the design pixel-for-pixel. Coordinates are normalized
- * to a 0,0-origin viewBox (source Figma export used a 54.3334/10.3334
- * offset) for cleaner rendering at small sizes. Uses `currentColor` so
- * it keeps inheriting the button's existing hover/active color states.
- */
 export function EditGridIcon({ size = 16, className }: EditGridIconProps) {
   return (
     <svg
@@ -21,7 +13,7 @@ export function EditGridIcon({ size = 16, className }: EditGridIconProps) {
       className={className}
       aria-hidden
     >
-      {/* top-right square */}
+      {}
       <path
         d="M13.3333 4.18V1.4866C13.3333 0.4266 12.9066 0 11.8466 0H9.1533C8.0933 0 7.6666 0.4266 7.6666 1.4866V4.18C7.6666 5.24 8.0933 5.6666 9.1533 5.6666H11.8466C12.9066 5.6666 13.3333 5.24 13.3333 4.18Z"
         fill="none"
@@ -30,7 +22,7 @@ export function EditGridIcon({ size = 16, className }: EditGridIconProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* top-left square */}
+      {}
       <path
         d="M5.6666 4.3466V1.32C5.6666 0.38 5.2399 0 4.1799 0H1.4866C0.4266 0 0 0.38 0 1.32V4.34C0 5.2866 0.4266 5.66 1.4866 5.66H4.1799C5.2399 5.66 5.6666 5.2866 5.6666 4.3466Z"
         fill="none"
@@ -39,7 +31,7 @@ export function EditGridIcon({ size = 16, className }: EditGridIconProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* bottom-left square */}
+      {}
       <path
         d="M5.6666 11.8466V9.1533C5.6666 8.0933 5.2399 7.6666 4.1799 7.6666H1.4866C0.4266 7.6666 0 8.0933 0 9.1533V11.8466C0 12.9066 0.4266 13.3333 1.4866 13.3333H4.1799C5.2399 13.3333 5.6666 12.9066 5.6666 11.8466Z"
         fill="none"
@@ -48,7 +40,7 @@ export function EditGridIcon({ size = 16, className }: EditGridIconProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* bottom-right plus */}
+      {}
       <path d="M8.3333 10.3332H12.3333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
       <path d="M10.3333 12.3332V8.3332" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>

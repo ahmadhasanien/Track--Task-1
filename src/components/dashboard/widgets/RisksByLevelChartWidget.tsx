@@ -2,14 +2,12 @@ import { useMemo, useRef, useState } from 'react';
 import { Card } from '../../ui/Card';
 import { risksByMonth } from '../../../data/mockDashboard';
 
-// Order matches the visual stacking bottom -> top: low, medium, high.
 const SEGMENTS = [
   { key: 'low', label: 'منخفض', color: '#17B26A' },
   { key: 'medium', label: 'متوسط', color: '#F79009' },
   { key: 'high', label: 'مرتفع', color: '#F04438' },
 ] as const;
 
-// Legend reads right-to-left: مرتفع، متوسط، منخفض.
 const LEGEND_ITEMS = [...SEGMENTS].reverse();
 
 const CURRENT_MONTH = new Date()

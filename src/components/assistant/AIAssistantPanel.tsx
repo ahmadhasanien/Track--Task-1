@@ -155,7 +155,7 @@ export function AIAssistantPanel() {
     try {
       await navigator.clipboard.writeText(text);
     } catch {
-      /* clipboard unavailable — silently ignore */
+      
     }
   }
 

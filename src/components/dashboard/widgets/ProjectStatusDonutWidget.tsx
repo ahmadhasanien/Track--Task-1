@@ -7,8 +7,7 @@ export function ProjectStatusDonutWidget() {
     <Card className="widget-status-donut">
       <p className="widget-title">توزيع حالات المشاريع</p>
       <div className="widget-status-donut__body">
-        {/* Legend first, donut second: in RTL the first child lands on the
-            right and the donut on the far left, matching the design. */}
+        {}
         <div className="legend-list widget-status-donut__legend">
           {projectStatuses.map((item) => (
             <div key={item.label} className="legend-item">

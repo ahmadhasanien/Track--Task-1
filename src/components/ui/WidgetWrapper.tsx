@@ -6,13 +6,7 @@ interface WidgetWrapperProps {
   children: ReactNode;
   isEditMode: boolean;
   onRemove: () => void;
-  /**
-   * When true, the widget's content is measured at its natural height
-   * (instead of being stretched/clipped to the grid cell), and each
-   * change is reported via `onContentResize` so the parent grid can grow
-   * or shrink the widget's row-span to fit — e.g. when a new alert is
-   * added to `TodayAlertsWidget`.
-   */
+  
   autoHeight?: boolean;
   onContentResize?: (contentHeightPx: number) => void;
 }
@@ -31,8 +25,8 @@ export function WidgetWrapper({
     const el = contentRef.current;
     if (!el) return;
 
-    // Report the initial height immediately, then keep watching for changes
-    // (new/removed alerts, text reflow, font load, etc.).
+    
+    
     onContentResize(el.scrollHeight);
 
     const observer = new ResizeObserver((entries) => {

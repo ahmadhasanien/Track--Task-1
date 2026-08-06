@@ -3,7 +3,7 @@ import './ui.css';
 interface ProgressBarProps {
   value: number;
   className?: string;
-  /** Visual tone of the fill. Defaults to 'success' (green). */
+  
   tone?: 'success' | 'warning' | 'danger' | 'info';
 }
 

@@ -1,23 +1,31 @@
-import editGridIcon from '../../assets/icons/edit-grid.png';
+import { EditGridIcon } from './EditGridIcon';
+import { PageHeader } from './PageHeader';
+import type { UserRole } from '../../types/auth';
 import './layout.css';
 
 interface HeaderProps {
+  role: UserRole;
   isEditMode: boolean;
   onToggleEdit: () => void;
 }
 
-export function Header({ isEditMode, onToggleEdit }: HeaderProps) {
+export function Header({ role, isEditMode, onToggleEdit }: HeaderProps) {
   return (
-    <header className="header" dir="rtl">
-      <h1 className="header__title">لوحة التحكم</h1>
-      <button
-        type="button"
-        className={`header__edit-btn ${isEditMode ? 'header__edit-btn--active' : ''}`}
-        onClick={onToggleEdit}
-      >
-        <img src={editGridIcon} alt="" className="header__edit-icon" width={16} height={16} />
-        {isEditMode ? 'إنهاء التحرير' : 'تحرير'}
-      </button>
-    </header>
+    <PageHeader
+      title="لوحة التحكم"
+      subtitle="نظرة عامة على أداء المنصة"
+      action={
+        role === 'superadmin' ? null : (
+          <button
+            type="button"
+            className={`header__edit-btn ${isEditMode ? 'header__edit-btn--active' : ''}`}
+            onClick={onToggleEdit}
+          >
+            <EditGridIcon size={16} className="header__edit-icon" />
+            <span>{isEditMode ? 'إنهاء التحرير' : 'تحرير'}</span>
+          </button>
+        )
+      }
+    />
   );
 }

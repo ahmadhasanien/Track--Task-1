@@ -8,10 +8,7 @@
   flex-direction: column;
   box-sizing: border-box;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  /* Without this, flex children default to min-width: auto and refuse to
-     shrink below their content's natural size, so at narrow grid-column
-     widths (e.g. after a window resize) text and charts overflow the
-     card instead of wrapping/shrinking. */
+  
   min-width: 0;
   overflow: hidden;
 }
@@ -95,11 +92,7 @@
 }
 
 .widget-wrapper__content--auto {
-  /* Intentionally NOT height: 100% — this lets the child Card size itself
-     to its actual content (so we can measure it) instead of being
-     stretched/clipped to whatever row-span the grid last assigned. The
-     grid then grows/shrinks to match via ResizeObserver, not the other
-     way around. */
+  
   min-width: 0;
 }
 
@@ -159,14 +152,10 @@
   margin: 0 0 10px;
 }
 
-/* Pushes a block to the bottom of the (flex-column) card, e.g. a stat
-   value that should sit under a title with empty space in between. */
 .widget-stat-block {
   margin-top: auto;
 }
 
-/* Number + unit label sitting on the same line (e.g. "8 مشاريع"),
-   instead of stacked on separate lines. */
 .widget-stat-inline {
   display: flex;
   align-items: baseline;
@@ -177,8 +166,6 @@
   margin-top: 0;
 }
 
-/* Bottom row that pairs a stat block with something else (e.g. a badge),
-   spaced apart edge-to-edge. In RTL the first child lands on the right. */
 .widget-bottom-row {
   margin-top: auto;
   display: flex;
@@ -187,7 +174,6 @@
   gap: 12px;
 }
 
-/* Title + small icon-only badge on a single header row. */
 .widget-icon-header {
   display: flex;
   align-items: center;
@@ -212,8 +198,12 @@
   flex-shrink: 0;
 }
 
-/* Middle content row for the progress widget: percentage value + status
-   pill, spaced apart, sitting above the progress bar. */
+.widget-icon-badge--lg {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+}
+
 .widget-progress-row {
   display: flex;
   align-items: center;
@@ -222,12 +212,6 @@
   margin-bottom: 8px;
 }
 
-/* --- Compact top-row KPI cards (Active Projects / Upcoming Deliverables) ---
-   These two cards only hold a title + a single stat line, so the default
-   "title top, stat pushed to the bottom via margin-top:auto" layout leaves
-   a large, uneven gap compared to the denser sibling KPI cards. Pulling
-   the stat up closer to the title keeps the card's fixed grid height but
-   removes that visual dead space. */
 .widget-kpi-compact {
   justify-content: flex-start;
 }
@@ -251,10 +235,6 @@
   margin-top: 6px;
 }
 
-/* --- Upcoming Deliverables widget (widget 3) ---
-   Same title/value/label sizing correction as widget-active-projects below;
-   scoped separately so it doesn't touch that widget, and deliberately
-   leaves the warning Badge (the "خلال أسبوع" pill) untouched. */
 .widget-upcoming-deliverables .widget-kpi-compact__title {
   font-size: 16px;
   font-weight: 700;
@@ -272,17 +252,10 @@
   color: #8e8f97;
 }
 
-/* Unlike Active Projects, this card's stat row should sit at the
-   bottom of the card with the title pinned at top, not pulled up
-   close beneath it. */
 .widget-upcoming-deliverables .widget-kpi-compact__bottom-row {
   margin-top: auto;
 }
 
-
-/* --- Active Projects widget (widget 1) ---
-   Scoped on top of .widget-kpi-compact so it doesn't affect the sibling
-   Upcoming Deliverables card, which still uses the shared base styles. */
 .widget-active-projects {
   justify-content: center;
 }
@@ -309,8 +282,6 @@
   color: #8e8f97;
 }
 
-/* --- Average progress widget --- */
-
 .widget-avg-progress {
   gap: 0;
 }
@@ -320,11 +291,6 @@
   flex-shrink: 0;
 }
 
-/* Title must never wrap: at the widget's minimum grid width there isn't
-   room for two lines, and since the card has a fixed (grid-driven)
-   height with overflow:hidden, a wrapped title pushes the progress bar
-   past the bottom edge and clips it out of view entirely. Truncating
-   instead guarantees the badge + value row and the bar always fit. */
 .widget-avg-progress .widget-title {
   flex: 1 1 auto;
   min-width: 0;
@@ -352,10 +318,6 @@
   line-height: 1.15;
 }
 
-/* Original design uses a brighter status-pill text color than the shared
-   ui-badge--success default; scoped here so ProjectsListWidget and
-   UpcomingDeliverablesWidget (which also use Badge variant="success")
-   keep their existing look. */
 .widget-avg-progress .ui-badge--success {
   color: #17b26a;
 }
@@ -370,13 +332,9 @@
   background: #d9d9d9;
 }
 
-/* Original design's fill is a flat green, not the shared gradient used by
-   ProjectsListWidget/UpcomingDeliverablesWidget's progress bars. */
 .widget-avg-progress__bar .ui-progress__fill--success {
   background: #17b26a;
 }
-
-/* --- Open risks ring breakdown widget --- */
 
 .widget-open-risks__title {
   font-size: 16px;
@@ -384,14 +342,6 @@
   color: #8e8f97;
 }
 
-/* The shared .legend-item spreads value/label to opposite edges via
-   space-between, which reads as too much air between the number and
-   the label in this widget's design. The label group is a different
-   width on each line (مرتفع / متوسط / منخفض); pinning it to a fixed
-   column width keeps its right edge (and therefore the value's
-   centered slot next to it) in the exact same place row to row, so
-   the numbers both center between the chart and label *and* stack
-   into a clean vertical column, matching the target design. */
 .widget-open-risks .legend-item {
   display: flex;
   align-items: center;
@@ -407,8 +357,6 @@
   flex: 1;
   text-align: center;
 }
-
-/* --- Risks by level chart widget --- */
 
 .widget-risks-chart {
   gap: 0;
@@ -520,8 +468,6 @@
   font-weight: 700;
 }
 
-/* --- Project status donut widget --- */
-
 .widget-status-donut {
   gap: 0;
 }
@@ -565,8 +511,6 @@
   height: 150px;
   flex-shrink: 0;
 }
-
-/* --- Today alerts widget --- */
 
 .widget-today-alerts {
   gap: 0;
@@ -741,12 +685,6 @@
   white-space: nowrap;
 }
 
-/* --- Stacked list rows (Projects / Deliverables widgets) ---
-   Replaces the old single-item "carousel" pattern: instead of flipping
-   through one item at a time with a prev/next pair pinned to the card's
-   bottom, every item renders as its own row with a single leading
-   ("next"/details) chevron, stacked in a scrollable column so the list
-   can hold more items than the card's fixed grid height. */
 .list-rows {
   display: flex;
   flex-direction: column;
@@ -821,4 +759,150 @@
 
 .list-row__nav-btn:hover {
   background: #f5f5f6;
+}
+
+.list-row__title--single-line {
+  margin-bottom: 0;
+}
+
+.widget-active-tenants .widget-kpi-compact__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8e8f97;
+  margin-bottom: 12px;
+}
+
+.widget-active-tenants .widget-stat-block {
+  margin-top: auto;
+}
+
+.widget-active-tenants .widget-stat-value {
+  font-size: 28px;
+  color: #000000;
+}
+
+.widget-active-tenants .widget-stat-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #8e8f97;
+}
+
+.widget-subscriptions-ending .widget-kpi-compact__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8e8f97;
+  margin-bottom: 12px;
+}
+
+.widget-subscriptions-ending .widget-stat-block {
+  margin-top: auto;
+}
+
+.widget-subscriptions-ending .widget-stat-value {
+  font-size: 28px;
+  color: #000000;
+}
+
+.widget-subscriptions-ending .widget-stat-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #8e8f97;
+}
+
+.widget-total-revenue {
+  gap: 0;
+  position: relative;
+}
+
+.widget-total-revenue .widget-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8e8f97;
+  margin-bottom: 12px;
+  padding-left: 34px;
+}
+
+.widget-total-revenue__icon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+}
+
+.widget-total-revenue__value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #000000;
+}
+
+.widget-total-revenue .widget-stat-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #8e8f97;
+}
+
+.widget-tenant-status-donut__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8e8f97;
+  margin-bottom: 12px;
+}
+
+.widget-tenant-status-donut .legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.widget-tenant-status-donut .legend-item__left {
+  flex: 0 0 64px;
+  justify-content: flex-start;
+  white-space: nowrap;
+}
+
+.widget-tenant-status-donut .legend-item__value {
+  flex: 1;
+  text-align: center;
+}
+
+.widget-tenant-plan-donut {
+  gap: 0;
+}
+
+.widget-tenant-plan-donut .widget-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.widget-tenant-plan-donut__body {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+}
+
+.widget-tenant-plan-donut__legend {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.widget-tenant-plan-donut__legend .legend-item {
+  background: #f4f4f5;
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+
+.widget-tenant-plan-donut__legend .legend-item__left {
+  color: #18181b;
+  font-weight: 700;
+}
+
+.widget-tenant-plan-donut__chart {
+  width: 150px;
+  height: 150px;
+  flex-shrink: 0;
 }

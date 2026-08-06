@@ -1,6 +1,4 @@
-/* ------------------------------------------------------------------ */
-/*  AI Assistant chat panel                                           */
-/* ------------------------------------------------------------------ */
+
 
 .assistant-fab {
   position: fixed;
@@ -49,8 +47,6 @@
   direction: rtl;
   border: 1px solid #f0e2fb;
 }
-
-/* ---- shared header (conversation mode) ---- */
 
 .assistant-panel__header {
   display: flex;
@@ -101,8 +97,6 @@
   text-overflow: ellipsis;
   transition: color 0.15s ease;
 }
-
-/* ---- welcome (collapsed->opened first) view ---- */
 
 .assistant-welcome {
   display: flex;
@@ -166,8 +160,6 @@
   margin-top: 24px;
 }
 
-/* ---- composer (shared between welcome + conversation) ---- */
-
 .assistant-composer {
   display: flex;
   align-items: center;
@@ -222,8 +214,6 @@
   background: #f5f5f7;
 }
 
-/* ---- suggestion pills ---- */
-
 .assistant-suggestions {
   display: flex;
   gap: 8px;
@@ -263,8 +253,6 @@
   flex-shrink: 0;
 }
 
-/* ---- conversation view ---- */
-
 .assistant-conversation {
   display: flex;
   flex-direction: column;
@@ -294,12 +282,12 @@
 }
 
 .assistant-msg--user {
-  /* container is direction: rtl, so flex-start = visual right */
+  
   align-items: flex-start;
 }
 
 .assistant-msg--assistant {
-  /* container is direction: rtl, so flex-end = visual left */
+  
   align-items: flex-end;
 }
 
@@ -336,7 +324,7 @@
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  /* container is direction: rtl, so flex-start = visual right (RTL reading start) */
+  
   gap: 6px;
   text-align: right;
 }
@@ -402,8 +390,6 @@
     opacity: 1;
   }
 }
-
-/* ---- small screens ---- */
 
 @media (max-width: 480px) {
   .assistant-panel {

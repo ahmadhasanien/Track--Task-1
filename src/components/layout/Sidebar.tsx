@@ -1,18 +1,23 @@
-import type { ReactElement } from 'react';
-import { MoreVertical, Search } from 'lucide-react';
+import { type ReactElement, useEffect, useRef, useState } from 'react';
+import { LogOut, MoreVertical, Search } from 'lucide-react';
 import { navItems, userProfile } from '../../data/mockDashboard';
+import type { UserRole } from '../../types/auth';
 import logoFull from '../../assets/logo-full.png';
 import {
+  AuditLogIcon,
   CompaniesIcon,
   DashboardIcon,
   DepartmentsIcon,
   GoalsIcon,
   ProjectsIcon,
   SidebarSettingsIcon,
+  SubscriptionsIcon,
+  TenantsIcon,
 } from './SidebarIcons';
 import './layout.css';
+import './sidebar-dropdown.css';
 
-const navIcons: Record<string, () => ReactElement> = {
+const adminNavIcons: Record<string, () => ReactElement> = {
   dashboard: DashboardIcon,
   goals: GoalsIcon,
   projects: ProjectsIcon,
@@ -20,72 +25,238 @@ const navIcons: Record<string, () => ReactElement> = {
   departments: DepartmentsIcon,
 };
 
-export type PageId = 'dashboard' | 'companies';
+export type PageId = 'dashboard' | 'companies' | 'tenants' | 'subscriptions' | 'audit-log';
 
-// Pages that actually exist and can be routed to. Other nav items
-// (goals, projects, departments) stay in the menu for visual
-// completeness but don't have a page wired up yet.
-const ROUTABLE_PAGES: PageId[] = ['dashboard', 'companies'];
+const ADMIN_ROUTABLE_PAGES: PageId[] = ['dashboard', 'companies'];
 
-interface SidebarProps {
-  activePage: PageId;
-  onNavigate: (page: PageId) => void;
+interface SuperadminNavItem {
+  id: PageId;
+  label: string;
+  icon: () => ReactElement;
 }
 
-export function Sidebar({ activePage, onNavigate }: SidebarProps) {
+const SUPERADMIN_NAV_ITEMS: SuperadminNavItem[] = [
+  { id: 'dashboard', label: 'لوحة التحكم', icon: DashboardIcon },
+  { id: 'tenants', label: 'إدارة المستأجرين', icon: TenantsIcon },
+  { id: 'subscriptions', label: 'الاشتراكات والباقات', icon: SubscriptionsIcon },
+  { id: 'audit-log', label: 'سجل التدقيق', icon: AuditLogIcon },
+];
+
+interface SidebarProps {
+  role: UserRole;
+  activePage: PageId;
+  onNavigate: (page: PageId) => void;
+  
+  onSignOut?: () => void;
+}
+
+interface SignOutModalProps {
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+function SignOutModal({ onConfirm, onCancel }: SignOutModalProps) {
+  
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onCancel();
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [onCancel]);
+
   return (
-    <aside className="sidebar" dir="rtl">
-      <div className="sidebar__logo">
-        <img src={logoFull} alt="track+" className="sidebar__logo-full" />
-      </div>
+    
+    <div
+      className="signout-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="signout-modal-title"
+      dir="rtl"
+      onClick={(e) => {
+        
+        if (e.target === e.currentTarget) onCancel();
+      }}
+    >
+      <div className="signout-modal">
+        {}
+        <div className="signout-modal__icon-wrap">
+          <LogOut size={24} strokeWidth={2} className="signout-modal__icon" />
+        </div>
 
-      <div className="sidebar__search">
-        <Search size={18} strokeWidth={2.5} className="sidebar__search-icon" />
-        <input type="search" placeholder="البحث" aria-label="بحث" />
-      </div>
+        {}
+        <h2 id="signout-modal-title" className="signout-modal__title">
+          تسجيل الخروج
+        </h2>
+        <p className="signout-modal__body">
+          هل أنت متأكد أنك تريد تسجيل الخروج؟
+        </p>
 
-      <nav className="sidebar__nav">
-        {navItems.map((item) => {
-          const Icon = navIcons[item.id];
-          const isRoutable = ROUTABLE_PAGES.includes(item.id as PageId);
-          return (
-            <a
-              key={item.id}
-              href="#"
-              className={`sidebar__nav-item ${
-                item.id === activePage ? 'sidebar__nav-item--active' : ''
-              }`}
-              onClick={(event) => {
-                event.preventDefault();
-                if (isRoutable) {
-                  onNavigate(item.id as PageId);
-                }
-              }}
-            >
-              <Icon />
-              <span>{item.label}</span>
-            </a>
-          );
-        })}
-      </nav>
-
-      <div className="sidebar__footer">
-        <a href="#" className="sidebar__nav-item">
-          <SidebarSettingsIcon />
-          <span>الإعدادات</span>
-        </a>
-
-        <div className="sidebar__profile">
-          <button type="button" className="sidebar__profile-menu" aria-label="المزيد">
-            <MoreVertical size={18} strokeWidth={2.5} />
+        {}
+        <div className="signout-modal__actions">
+          <button
+            type="button"
+            className="signout-modal__btn signout-modal__btn--cancel"
+            onClick={onCancel}
+          >
+            إلغاء
           </button>
-          <div className="sidebar__profile-info">
-            <span className="sidebar__profile-name">{userProfile.name}</span>
-            <span className="sidebar__profile-role">{userProfile.role}</span>
-          </div>
-          <div className="sidebar__avatar">{userProfile.initial}</div>
+          <button
+            type="button"
+            className="signout-modal__btn signout-modal__btn--confirm"
+            onClick={onConfirm}
+            autoFocus
+          >
+            تسجيل الخروج
+          </button>
         </div>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+export function Sidebar({ role, activePage, onNavigate, onSignOut }: SidebarProps) {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
+
+  const items: SuperadminNavItem[] =
+    role === 'superadmin'
+      ? SUPERADMIN_NAV_ITEMS
+      : navItems.map((item) => ({
+          id: item.id as PageId,
+          label: item.label,
+          icon: adminNavIcons[item.id],
+        }));
+
+  
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node) &&
+        moreButtonRef.current &&
+        !moreButtonRef.current.contains(e.target as Node)
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
+
+  const handleSignOutClick = () => {
+    setDropdownOpen(false);
+    setShowSignOutModal(true);
+  };
+
+  const handleConfirmSignOut = () => {
+    setShowSignOutModal(false);
+    
+    localStorage.removeItem('authToken');
+    sessionStorage.removeItem('authToken');
+    document.cookie = 'authToken=; Max-Age=0; path=/';
+    
+    onSignOut?.();
+  };
+
+  return (
+    <>
+      <aside className="sidebar" dir="rtl">
+        <div className="sidebar__logo">
+          <img src={logoFull} alt="track+" className="sidebar__logo-full" />
+        </div>
+
+        <div className="sidebar__search">
+          <Search size={18} strokeWidth={2.5} className="sidebar__search-icon" />
+          <input type="search" placeholder="البحث" aria-label="بحث" />
+        </div>
+
+        <nav className="sidebar__nav">
+          {items.map((item) => {
+            const Icon = item.icon;
+            const isRoutable = role === 'superadmin' || ADMIN_ROUTABLE_PAGES.includes(item.id);
+            return (
+              <a
+                key={item.id}
+                href="#"
+                className={`sidebar__nav-item ${
+                  item.id === activePage ? 'sidebar__nav-item--active' : ''
+                }`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (isRoutable) {
+                    onNavigate(item.id);
+                  }
+                }}
+              >
+                <Icon />
+                <span>{item.label}</span>
+              </a>
+            );
+          })}
+        </nav>
+
+        <div className="sidebar__footer">
+          <a href="#" className="sidebar__nav-item">
+            <SidebarSettingsIcon />
+            <span>الإعدادات</span>
+          </a>
+
+          <div className="sidebar__profile">
+            {}
+            <div className="sidebar__profile-menu-wrap">
+              <button
+                ref={moreButtonRef}
+                type="button"
+                className={`sidebar__profile-menu ${dropdownOpen ? 'sidebar__profile-menu--active' : ''}`}
+                aria-label="المزيد من الخيارات"
+                aria-expanded={dropdownOpen}
+                aria-haspopup="menu"
+                onClick={() => setDropdownOpen((prev) => !prev)}
+              >
+                <MoreVertical size={18} strokeWidth={2.5} />
+              </button>
+
+              {}
+              {dropdownOpen && (
+                <div
+                  ref={dropdownRef}
+                  className="profile-dropdown"
+                  role="menu"
+                  aria-label="خيارات المستخدم"
+                >
+                  <button
+                    type="button"
+                    role="menuitem"
+                    className="profile-dropdown__item profile-dropdown__item--danger"
+                    onClick={handleSignOutClick}
+                  >
+                    <LogOut size={15} strokeWidth={2} aria-hidden />
+                    <span>تسجيل الخروج</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="sidebar__profile-info">
+              <span className="sidebar__profile-name">{userProfile.name}</span>
+              <span className="sidebar__profile-role">{userProfile.role}</span>
+            </div>
+            <div className="sidebar__avatar">{userProfile.initial}</div>
+          </div>
+        </div>
+      </aside>
+
+      {}
+      {showSignOutModal && (
+        <SignOutModal
+          onConfirm={handleConfirmSignOut}
+          onCancel={() => setShowSignOutModal(false)}
+        />
+      )}
+    </>
   );
 }

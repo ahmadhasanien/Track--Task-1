@@ -4,7 +4,6 @@ import { Badge } from '../../ui/Badge';
 import { ProgressBar } from '../../ui/ProgressBar';
 import { dashboardStats } from '../../../data/mockDashboard';
 
-/** Red under 40%, yellow/orange between 40–70%, green from 70% up. */
 function getProgressTone(value: number): 'danger' | 'warning' | 'success' {
   if (value < 40) return 'danger';
   if (value < 70) return 'warning';

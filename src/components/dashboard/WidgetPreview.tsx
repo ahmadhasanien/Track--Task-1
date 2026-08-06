@@ -1,27 +1,22 @@
 import type { ReactElement } from 'react';
-import { AlertTriangle, Bell, CheckCircle2, Clock, TrendingUp } from 'lucide-react';
+import { AlertTriangle, Bell, CheckCircle2, Clock, Tag, TrendingUp } from 'lucide-react';
 import { WIDGET_REGISTRY, type WidgetId } from '../../config/widgets';
 import {
   dashboardStats,
   deliverables,
+  latestActions,
+  latestTenants,
   openRisks,
   projects,
   projectStatuses,
   risksByMonth,
+  subscriptionsRevenueByMonth,
+  tenantAlerts,
+  tenantStats,
+  tenantStatusBreakdown,
+  tenantsByPlan,
   todayAlerts,
 } from '../../data/mockDashboard';
-
-/**
- * Small, self-contained preview renderers for the widget library drawer.
- *
- * These intentionally do NOT reuse the full dashboard widget components
- * (ActiveProjectsWidget, RisksByLevelChartWidget, etc). Those are built to
- * fill a full grid cell — some need 180px+ of height for their chart alone
- * — so dropping them into a shallow thumbnail and scaling/clipping them
- * produces the cut-off donut / half-visible legend bug seen in the running
- * app. A purpose-built miniature keeps every preview legible at a fixed,
- * predictable height.
- */
 
 function Donut({ segments }: { segments: { color: string; value: number }[] }) {
   const total = segments.reduce((sum, s) => sum + s.value, 0) || 1;
@@ -59,8 +54,8 @@ function LegendRows({ rows }: { rows: { color: string; label: string; value: num
 }
 
 function ActiveProjectsPreview() {
-  // ActiveProjectsWidget pairs the value + unit label on a single
-  // baseline-aligned line ("8 مشاريع"), not stacked on two lines.
+  
+  
   return (
     <div className="wlp-stat-inline">
       <span className="wlp-stat__value">{dashboardStats.activeProjects}</span>
@@ -69,9 +64,6 @@ function ActiveProjectsPreview() {
   );
 }
 
-// Tone thresholds and labels mirror AvgProgressWidget exactly (red under
-// 40%, orange 40–70%, green 70%+) so the mini preview keeps matching the
-// real widget even if the mock progress value changes.
 const AVG_PROGRESS_TONE_LABELS: Record<'danger' | 'warning' | 'success', string> = {
   success: 'على المسار',
   warning: 'يحتاج متابعة',
@@ -106,9 +98,9 @@ function AvgProgressPreview() {
 }
 
 function UpcomingDeliverablesPreview() {
-  // Order matches UpcomingDeliverablesWidget: stat-inline first, badge
-  // second — in this RTL card that lands the count on the right and the
-  // badge on the left, same as the real widget.
+  
+  
+  
   return (
     <div className="wlp-bottom-row">
       <div className="wlp-stat-inline">
@@ -130,9 +122,9 @@ function OpenRisksDonutPreview() {
     { color: '#17B26A', value: openRisks.low },
   ];
   return (
-    // Legend first, donut second: same as OpenRisksDonutWidget — in this
-    // RTL card the first child lands on the right, putting the legend on
-    // the right and the donut on the far left, matching the target design.
+    
+    
+    
     <div className="wlp-donut-row">
       <LegendRows
         rows={[
@@ -149,7 +141,7 @@ function OpenRisksDonutPreview() {
 function ProjectStatusDonutPreview() {
   const segments = projectStatuses.map((s) => ({ color: s.color, value: s.value }));
   return (
-    // Same legend-first/donut-second order as ProjectStatusDonutWidget.
+    
     <div className="wlp-donut-row">
       <LegendRows
         rows={projectStatuses.map((s) => ({ color: s.color, label: s.label, value: `${s.value}%` }))}
@@ -169,9 +161,7 @@ function RisksByLevelPreview() {
         const height = Math.max(24, Math.round((total / maxTotal) * 56));
         return (
           <div className="wlp-bars__col" key={m.month} style={{ height }}>
-            {/* DOM order low → medium → high, same as RisksByLevelChartWidget's
-                SEGMENTS array: inside a column-reverse flex container this
-                places green at the bottom and red at the top of each bar. */}
+            {}
             <div className="wlp-bars__seg" style={{ flex: m.low, background: '#17B26A' }} />
             <div className="wlp-bars__seg" style={{ flex: m.medium, background: '#F79009' }} />
             <div className="wlp-bars__seg" style={{ flex: m.high, background: '#F04438' }} />
@@ -220,7 +210,135 @@ function ProjectsListPreview() {
   );
 }
 
+function ActiveTenantsPreview() {
+  
+  return (
+    <div className="wlp-stat-inline">
+      <span className="wlp-stat__value">{tenantStats.activeTenants}</span>
+      <span className="wlp-stat__label">جهات</span>
+    </div>
+  );
+}
+
+function SubscriptionsEndingPreview() {
+  return (
+    <div className="wlp-stat-inline">
+      <span className="wlp-stat__value">{tenantStats.subscriptionsEndingSoon}</span>
+      <span className="wlp-stat__label">حسابات</span>
+    </div>
+  );
+}
+
+function TotalRevenuePreview() {
+  return (
+    <div className="wlp-stat-inline">
+      <span className="wlp-stat__value">{tenantStats.totalRevenue}</span>
+      <span className="wlp-stat__label">ريال/شهري</span>
+    </div>
+  );
+}
+
+function TenantStatusDonutPreview() {
+  const segments = tenantStatusBreakdown.map((s) => ({ color: s.color, value: s.value }));
+  return (
+    
+    <div className="wlp-donut-row">
+      <LegendRows
+        rows={tenantStatusBreakdown.map((s) => ({ color: s.color, label: s.name, value: s.value }))}
+      />
+      <Donut segments={segments} />
+    </div>
+  );
+}
+
+function SubscriptionsRevenueChartPreview() {
+  const sample = subscriptionsRevenueByMonth.slice(0, 5);
+  const maxTotal = Math.max(...sample.map((m) => m.low + m.medium + m.high));
+  return (
+    <div className="wlp-bars">
+      {sample.map((m) => {
+        const total = m.low + m.medium + m.high;
+        const height = Math.max(24, Math.round((total / maxTotal) * 56));
+        return (
+          <div className="wlp-bars__col" key={m.month} style={{ height }}>
+            <div className="wlp-bars__seg" style={{ flex: m.low, background: '#17B26A' }} />
+            <div className="wlp-bars__seg" style={{ flex: m.medium, background: '#F79009' }} />
+            <div className="wlp-bars__seg" style={{ flex: m.high, background: '#F04438' }} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function TenantsByPlanDonutPreview() {
+  const segments = tenantsByPlan.map((s) => ({ color: s.color, value: s.value }));
+  return (
+    <div className="wlp-donut-row">
+      <LegendRows
+        rows={tenantsByPlan.map((s) => ({ color: s.color, label: s.label, value: `${s.value}%` }))}
+      />
+      <Donut segments={segments} />
+    </div>
+  );
+}
+
+function TenantAlertsPreview() {
+  const sample = tenantAlerts.slice(0, 2);
+  const iconClass: Record<string, string> = {
+    renewal: 'deliverable',
+    'unused-invite': 'risk',
+    'trial-expired': 'approval',
+  };
+  return (
+    <div className="wlp-alerts">
+      {sample.map((alert) => (
+        <div className="wlp-alerts__row" key={alert.id}>
+          <span className={`wlp-alerts__icon wlp-alerts__icon--${iconClass[alert.type]}`}>
+            {alert.type === 'unused-invite' ? (
+              <AlertTriangle size={12} />
+            ) : alert.type === 'trial-expired' ? (
+              <Tag size={12} />
+            ) : (
+              <Clock size={12} />
+            )}
+          </span>
+          <span className="wlp-alerts__title">{alert.title}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function LatestActionsPreview() {
+  const item = latestActions[0];
+  return (
+    <div className="wlp-list-item">
+      <p className="wlp-list-item__title">{item?.title ?? 'إجراء'}</p>
+    </div>
+  );
+}
+
+function LatestTenantsPreview() {
+  const item = latestTenants[0];
+  return (
+    <div className="wlp-list-item">
+      <p className="wlp-list-item__title">{item?.name ?? 'مستأجر'}</p>
+      <p className="wlp-list-item__subtitle">{item?.statusLabel ?? ''}</p>
+    </div>
+  );
+}
+
 const PREVIEWS: Record<WidgetId, () => ReactElement> = {
+  'active-tenants': ActiveTenantsPreview,
+  'total-revenue': TotalRevenuePreview,
+  'subscriptions-ending': SubscriptionsEndingPreview,
+  'tenant-status-donut': TenantStatusDonutPreview,
+  'subscriptions-revenue-chart': SubscriptionsRevenueChartPreview,
+  'tenant-plan-donut': TenantsByPlanDonutPreview,
+  'tenant-alerts': TenantAlertsPreview,
+  'latest-actions': LatestActionsPreview,
+  'latest-tenants': LatestTenantsPreview,
   'active-projects': ActiveProjectsPreview,
   'avg-progress': AvgProgressPreview,
   'upcoming-deliverables': UpcomingDeliverablesPreview,
@@ -234,6 +352,7 @@ const PREVIEWS: Record<WidgetId, () => ReactElement> = {
 
 const PREVIEW_ICONS: Partial<Record<WidgetId, ReactElement>> = {
   'avg-progress': <TrendingUp size={13} aria-hidden style={{ transform: 'scaleX(-1)' }} />,
+  'total-revenue': <TrendingUp size={13} aria-hidden />,
 };
 
 export function WidgetPreview({ id }: { id: WidgetId }) {
